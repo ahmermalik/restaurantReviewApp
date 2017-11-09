@@ -1,0 +1,14 @@
+{{title}}
+
+
+
+
+
+
+<h2>Here are the restaurant's that match your search criteria:</h2>
+<br>
+<ul>
+    {{#each searchResults}}
+        <li><a href="/restaurant/{{id}}">{{name}}</a></li>
+    {{/each}}
+</ul>

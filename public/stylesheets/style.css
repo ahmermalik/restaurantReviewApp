@@ -1,0 +1,16 @@
+body {
+  background: #e5e5e5;
+  background-color: lightcyan;
+  color: #272727;
+  font-family: 'Nunito', sans-serif;
+}
+
+
+.button{
+  margin:auto;
+}
+
+h2{
+  font-size: 12px;
+
+}
