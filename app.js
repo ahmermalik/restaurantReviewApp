@@ -26,7 +26,6 @@ app.get('/search', function (request, response, next) {
     let search = request.query.userSearch;
     //set 'query' to select ALL from restaurant table where restaurant name is ___. # is important. it tells the program not to use ' ' around $1, since we're already doing it.
     let query = `SELECT * FROM restaurant WHERE restaurant.name ILIKE '%$1#%'`;
-
     db.any(query, search)
         .then(function(searchResults) {
             //set context for how you want data to be displayed.
@@ -39,9 +38,33 @@ app.get('/search', function (request, response, next) {
 });
 
 app.get('/review/:id', function (request, response, next) {
-
-    response.render('insert_review.hbs');
+    var id = request.params.id;
+    // query to get name
+    response.render('insert_review.hbs', {title: 'Add Reviews', id: id});
 });
+
+app.post('/addReview', function(request, response, next) {
+    var title = request.body.title;
+    var review = request.body.review_text;
+    var stars = parseInt(request.body.stars);
+    var id = request.body.id;
+    var columns = {
+        title: title,
+        review: review,
+        stars: stars,
+        restaurant_id: id
+    }
+
+    console.log(columns);
+    var query = 'INSERT INTO review \
+    VALUES (default, ${title}, ${review}, ${stars}, Null, ${restaurant_id}) RETURNING id';
+    db.any(query, columns)
+        .then(function (results) {
+            response.render('insert_review_complete.hbs', {});
+            //console.log(q)
+        })
+        .catch(next);
+})
 
 app.get('/restaurant/:id', function (request, response, next) {
     var id = request.params.id;
@@ -62,6 +85,17 @@ app.get('/restaurant/:id', function (request, response, next) {
         })
         .catch(next);
 });
+
+app.post('/submit/:id', function (request, response, next) {
+    var id = request.params.id;
+    var query = "INSERT INTO review VALUES(default, null, $1, $2, $3, $4)"
+    db.any(query, [request.body.inputStars, request.body.inputTitle, request.body.inputText, id])
+        .then(function(result) {
+            response.redirect(`/restaurant/${id}`);
+        })
+        .catch(next);
+});
+
 
 var PORT = process.env.PORT || 8000;
 

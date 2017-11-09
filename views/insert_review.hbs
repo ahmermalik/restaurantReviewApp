@@ -1,7 +1,13 @@
-
-<form>
-    Name: <input name="reviewer_name" type="text" placeholder="Your Name"><br>
-    Title: <input name="title" type="text" placeholder=""><br>
+<h3>{{id}}</h3>
+<form action="/addReview" method="POST">
+    <!--Name: <input name="reviewer_name" type="text" placeholder="Your Name"><br>-->
+    Title: <input name="title" type="text" placeholder="Summary"><br>
     Review: <input name="review_text" type="text" placeholder="What are your thoughts?"><br>
     Stars: <input name="stars" type="number" placeholder="1 to 5 Stars"><br>
+    <input type="hidden" name="id" value="{{id}}"></input>
 </form>
+<script>
+    function submit_form() {
+        $('form').submit();
+    }
+</script>
