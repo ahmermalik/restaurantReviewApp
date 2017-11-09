@@ -45,12 +45,14 @@ app.get('/review/:id', function (request, response, next) {
 
 app.get('/restaurant/:id', function (request, response, next) {
     var id = request.params.id;
-    var q = 'SELECT * from review \
-    JOIN restaurant ON restaurant.id = restaurant_id \
-    JOIN reviewer ON reviewer.id = reviewer_id \
-    WHERE restaurant_id = $1';
+    //doing a left inner join with the restaurant and review table, because some restaurants may not have reviews, but we still want to render the page correctly.
+    var query = 'SELECT restaurant.id as id, restaurant.name, restaurant.address, restaurant.category,\n' +
+        'review.stars, review.title, review.title, reviewer.reviewer_name,reviewer.email, reviewer.karma from restaurant\n' +
+        'LEFT JOIN review ON restaurant.id = review.restaurant_id \n' +
+        'LEFT JOIN reviewer ON reviewer.id = review.reviewer_id\n' +
+        'WHERE restaurant.id = $1';
 
-    db.any(q, id)
+    db.any(query, id)
         .then(function(results){
             var restaurant = results[0]
          var context = {results : results, restaurant : restaurant}
@@ -61,7 +63,8 @@ app.get('/restaurant/:id', function (request, response, next) {
         .catch(next);
 });
 
-app.listen(8000, function () {
-    console.log('Listening on port 8000');
-});
+var PORT = process.env.PORT || 8000;
 
+app.listen(PORT, function () {
+    console.log('Listening on port ' + PORT);
+});
