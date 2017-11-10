@@ -1,16 +1,26 @@
 body {
-  background: #e5e5e5;
-  background-color: lightcyan;
-  color: #272727;
+  /*background: #e5e5e5;*/
+  /*background-color: lightcyan;*/
+  /*color: #272727;*/
   font-family: 'Nunito', sans-serif;
+  background-image: url('../images/food1.jpeg');
+  background-attachment: fixed;
 }
 
 
-.button{
+#main-button{
   margin:auto;
+  background-color: hsl(0, 0%, 90%);
+  /*color: hsl(200, 110%, 100%);*/
+  /*border-radius: 10%;*/
 }
 
 h2{
   font-size: 12px;
 
+}
+
+.restaurant-details{
+  text-align: center;
+  color: white;
 }

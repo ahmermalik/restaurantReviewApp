@@ -4,11 +4,12 @@
 
 
 
-
-<h2>Here are the restaurant's that match your search criteria:</h2>
+<div class="restaurant-details">
+<h1>Restaurant(s) that match your search criteria:</h1>
 <br>
-<ul>
+
     {{#each searchResults}}
-        <li><a href="/restaurant/{{id}}">{{name}}</a></li>
+        <a href="/restaurant/{{id}}">{{name}}</a><br>
     {{/each}}
-</ul>
+
+</div>
