@@ -1,10 +1,12 @@
-body {
+body, html {
   /*background: #e5e5e5;*/
   /*background-color: lightcyan;*/
   /*color: #272727;*/
   font-family: 'Nunito', sans-serif;
-  background-image: url('../images/food1.jpeg');
-  background-attachment: fixed;
+  height: 100%;
+  margin: 0;
+
+
 }
 
 
@@ -23,4 +25,14 @@ h2{
 .restaurant-details{
   text-align: center;
   color: white;
+}
+
+.bg{
+  background-image: url('../images/food1.jpeg');
+  height:100%;
+  /*background-position: center;*/
+  background-repeat: no-repeat;
+  background-size:cover;
+  z-index: 100;
+
 }
