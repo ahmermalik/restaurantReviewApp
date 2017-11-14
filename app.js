@@ -10,11 +10,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 var pgp = require('pg-promise')({});
 var db = pgp({database: 'restaurant_db'});
 
+var session = require('express-session');
+app.use(session({
+    secret: process.env.SECRET_KEY || 'dev',
+    resave: true,
+    saveUninitialized: false,
+    cookie: {maxAge: 60000}
+}));
 
 //set public folder to be static
 app.use('/static', express.static('public'));
 //set view engine as 'handlebars'
 app.set('view engine', 'hbs');
+
 
 
 //router to display index.hbs as main page
@@ -26,6 +34,16 @@ app.get("/", function (request, response, next) {
 app.get('/login', function (request, response) {
     response.render('landing.hbs');
 });
+
+app.use(function (request, response, next) {
+    console.log(request.method, request.path);
+    next();
+});
+
+app.get('/user/:id', function (request, response, next) {
+    response.send('USER')
+})
+
 app.post('/login', function (request, response) {
     var username = request.body.username;
     var password = request.body.password;
