@@ -36,3 +36,14 @@ h2{
   z-index: 100;
 
 }
+
+.block{
+  height:100px;
+  width:200px;
+  text-align:left;
+
+}
+
+.center {
+  margin:auto;
+}
