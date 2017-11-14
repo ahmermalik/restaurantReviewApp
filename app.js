@@ -17,23 +17,26 @@ app.use(session({
     secret: process.env.SECRET_KEY || 'dev',
     resave: true,
     saveUninitialized: false,
-    cookie: {maxAge: 60000}
+    cookie: {maxAge: 6000000}
 }));
 
 app.use(morgan('dev'));
+//set public folder to be static
+app.use('/static', express.static('public'));
 
 app.use(function (request, response, next) {
+    response.locals.user = request.session.name; //this is how you can pass in information from the database and assign it to a variable.
+    //You are requesting the session for name and assigning it to a local variable called 'user', so you can pass {{user}} to the html page.
     if (request.session.user) {
         next();
-    } else if (request.path == '/login') {
+    } else if (request.path == '/login' || request.path.startsWith('/static')) {
         next();
     } else {
         response.redirect('/login');
     }
 });
 
-//set public folder to be static
-app.use('/static', express.static('public'));
+
 //set view engine as 'handlebars'
 app.set('view engine', 'hbs');
 
@@ -42,59 +45,44 @@ app.set('view engine', 'hbs');
 
 //router to display index.hbs as main page
 app.get("/", function (request, response, next) {
-    response.render('index.hbs');
+    response.render('index.hbs', {});
 });
 
 
 app.get('/login', function (request, response) {
-    response.render('landing.hbs');
+    response.render('landing.hbs', {title: 'Login'});
 });
 
-app.get('/user/:id', function (request, response, next) {
-    response.send('USER')
-})
-
-app.post('/login', function (request, response) {
+app.post('/login', function (request, response, next) {
     var username = request.body.username;
     var password = request.body.password;
     var query = 'SELECT * from reviewer WHERE email = $1';
-    db.one(query, email)
+    db.one(query, username)
         .then (function(results){
-        console.log(results.password);
+        console.log(results);
         console.log(password);
-    }
-    if (results.password == password){
 
-        request.session.user = username;
-        response.redirect('/');
-    } else {
-        response.render('login.hbs');
-    }
+        if (results.p_word == password){
+
+            request.session.user = username;
+            request.session.name = results.reviewer_name;
+            response.redirect('/');
+        }
+        else {
+            response.render('landing.hbs',{ err: 'Incorrect Password' });
+        }
+    })
+        .catch(function (error) {
+            response.render('landing.hbs',{ err: 'Incorrect Login' });
+        });
 });
-// app.get('/user/:id', function (request, response, next) {
-//     response.send('USER')
-// })
-//
-//     var session = require('express-session');
-//     app.use(session({
-//         secret: process.env.SECRET_KEY || 'dev',
-//         resave: true,
-//         saveUninitialized: false,
-//         cookie: {maxAge: 60000}
-//     }));
-//
-// app.use(function (request, response, next) {
-//     if (request.session.user) {
-//         next();
-//     } else if (request.path == '/login') {
-//         next();
-//     } else {
-//         response.redirect('/login');
-//     }
-// });
-//
 
-
+app.get('/logout', function (request, response, next) {
+    request.session.destroy(function(err) {
+        response.redirect('/');
+    })
+    //response.render('index.hbs', {title: 'logout'});
+});
 
 app.get('/search', function (request, response, next) {
     //set 'search' query to the 'userSearch' name form in index.hbs
