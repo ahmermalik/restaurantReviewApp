@@ -3,16 +3,22 @@
 <div class="block center">
     <div class="row">
         <div class="col-xs-12">
-<form action="/login">
-<button type="submit" id="main-button" class="btn btn-primary">login</button></form>
-<form action="/search">
-    <div class="form-group">
-        <label for="exampleInputEmail1">Search a restaurant!</label>
-        <input type="search" class="form-control" name="userSearch" aria-describedby="emailHelp" placeholder="Restaurant Name">
-        <small id="emailHelp" class="form-text text-muted">Search results may vary.</small>
-    </div>
-    <button type="submit" id="main-button" class="btn btn-primary">Submit</button>
-</form>
+
+            <form action="/search">
+                <div class="form-group">
+                    <h2> Find Reviews!</h2>
+                    <input type="search" class="form-control" name="userSearch" aria-describedby="emailHelp"
+                           placeholder="Restaurant Name">
+                    <small id="emailHelp" class="form-text text-muted">Search results may vary.</small>
+                </div>
+                <button type="submit" id="main-button" class="btn btn-primary">Submit</button>
+            </form>
+
+            <div>
+                <form action="/login" method="GET">
+                    <button type="submit" id="main-button" class="btn btn-primary">Login</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
