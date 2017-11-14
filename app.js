@@ -9,8 +9,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //initialize database and link it.
 var pgp = require('pg-promise')({});
 var db = pgp({database: 'restaurant_db'});
-
+var morgan = require('morgan');
 var session = require('express-session');
+
+
 app.use(session({
     secret: process.env.SECRET_KEY || 'dev',
     resave: true,
@@ -18,10 +20,23 @@ app.use(session({
     cookie: {maxAge: 60000}
 }));
 
+app.use(morgan('dev'));
+
+app.use(function (request, response, next) {
+    if (request.session.user) {
+        next();
+    } else if (request.path == '/login') {
+        next();
+    } else {
+        response.redirect('/login');
+    }
+});
+
 //set public folder to be static
 app.use('/static', express.static('public'));
 //set view engine as 'handlebars'
 app.set('view engine', 'hbs');
+
 
 
 
@@ -33,11 +48,6 @@ app.get("/", function (request, response, next) {
 
 app.get('/login', function (request, response) {
     response.render('landing.hbs');
-});
-
-app.use(function (request, response, next) {
-    console.log(request.method, request.path);
-    next();
 });
 
 app.get('/user/:id', function (request, response, next) {
