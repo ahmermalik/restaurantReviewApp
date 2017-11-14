@@ -5,19 +5,59 @@ var express = require('express');
 var app = express();
 //initialize and require Node.js body parsing middleware
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 //initialize database and link it.
 var pgp = require('pg-promise')({});
 var db = pgp({database: 'restaurant_db'});
+
+
 //set public folder to be static
 app.use('/static', express.static('public'));
 //set view engine as 'handlebars'
 app.set('view engine', 'hbs');
 
+
 //router to display index.hbs as main page
-app.get("/", function (request, response) {
+app.get("/", function (request, response, next) {
     response.render('index.hbs');
 });
+
+
+app.get('/login', function (request, response) {
+    response.render('landing.hbs');
+});
+app.post('/login', function (request, response) {
+    var username = request.body.username;
+    var password = request.body.password;
+    if (username == 'aaron' && password == 'narf') {
+        request.session.user = username;
+        response.redirect('/');
+    } else {
+        response.render('login.hbs');
+    }
+});
+// app.get('/user/:id', function (request, response, next) {
+//     response.send('USER')
+// })
+//
+//     var session = require('express-session');
+//     app.use(session({
+//         secret: process.env.SECRET_KEY || 'dev',
+//         resave: true,
+//         saveUninitialized: false,
+//         cookie: {maxAge: 60000}
+//     }));
+//
+// app.use(function (request, response, next) {
+//     if (request.session.user) {
+//         next();
+//     } else if (request.path == '/login') {
+//         next();
+//     } else {
+//         response.redirect('/login');
+//     }
+// });
+//
 
 
 
