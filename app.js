@@ -57,7 +57,14 @@ app.get('/user/:id', function (request, response, next) {
 app.post('/login', function (request, response) {
     var username = request.body.username;
     var password = request.body.password;
-    if (username == 'aaron' && password == 'narf') {
+    var query = 'SELECT * from reviewer WHERE email = $1';
+    db.one(query, email)
+        .then (function(results){
+        console.log(results.password);
+        console.log(password);
+    }
+    if (results.password == password){
+
         request.session.user = username;
         response.redirect('/');
     } else {
